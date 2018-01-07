@@ -1,0 +1,9 @@
+@import "shadow";
+
+.ui-card {
+  @include shadow-card;
+
+  font-size: 0.24rem;
+  background-color: white;
+  user-select: none;
+}

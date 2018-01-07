@@ -1,0 +1,53 @@
+@import "colors";
+@import "shadow";
+
+.page-play {
+  .title {
+    margin-bottom: 0.32rem;
+    font-size: 0.80rem;
+  }
+
+  .mode {
+    &-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 0.16rem;
+    }
+
+    &-box {
+      @include shadow-card;
+
+      height: 100%;
+      padding: 0.16rem;
+      background-color: white;
+      cursor: pointer;
+      transition: 300ms;
+
+      &:hover {
+        @include shadow-dp--1(rgba(0, 0, 0, 0.3));
+
+        transform: translateY(-0.04rem);
+      }
+
+      & > header {
+        margin-bottom: 0.16rem;
+      }
+
+      & > main {}
+
+      & > footer {}
+    }
+
+    &-title {
+      font-size: 0.36rem;
+
+      &--sub {
+        font-size: 0.12rem;
+      }
+    }
+
+    &-detail {
+      font-size: 0.16rem;
+    }
+  }
+}

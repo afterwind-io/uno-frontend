@@ -1,0 +1,173 @@
+@import "colors";
+@import "shadow";
+
+.page-game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .player-list {
+    position: absolute;
+    left: 0;
+    width: 3.2rem;
+    height: 100%;
+    padding: 0.16rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .player-box {
+    position: relative;
+    width: 100%;
+    border-radius: 0.08rem;
+
+    .player1 .bg {
+      background: url(./asset/avatar.png) center no-repeat;
+    }
+
+    .player2 .bg {
+      background: url(./asset/avatar2.jpg) center no-repeat;
+    }
+
+    .player {
+      // @include shadow-card;
+
+      position: relative;
+      width: 100%;
+      height: 0.60rem;
+
+      // margin-bottom: 0.04rem;
+      border-radius: 0.08rem;
+      background-color: white;
+      transition: 300ms;
+      display: flex;
+      align-items: center;
+
+      &--current {
+        // @include shadow-card;
+        // @include shadow-dp--1(rgba(0, 0, 0, 0.3));
+
+        // transform: scale(1.1, 1.1);
+        transform: translateX(0.32rem);
+
+        // transform-origin: left center;
+        // z-index: 2;
+        // width: 110%;
+     
+      }
+
+      .bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        border-radius: 0.08rem;
+        opacity: 0.7;
+        pointer-events: none;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, white, transparent, white);
+          border-radius: 0.08rem;
+        }
+      }
+
+      .player-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 0.08rem;
+        z-index: 1;
+      }
+
+      .player-name {
+        font-size: 0.16rem;
+        line-height: 0.16rem;
+      }
+
+      // TODO: DELETE
+      .gap {
+        flex-grow: 1;
+      }
+
+      .player-remains {
+        margin: 0.04rem;
+        font-size: 0.16rem;
+        line-height: 0.16rem;
+      }
+
+      .player-card {
+        @include shadow-card;
+
+        margin: 0.04rem;
+        width: 0.30rem;
+        height: 0.48rem;
+        background-color: white;
+      }
+
+      .player-points {
+        margin: 0.04rem;
+        font-size: 0.16rem;
+        line-height: 0.16rem;
+      }
+
+      svg {
+        margin: 0.04rem;
+        height: 0.16rem;
+        fill: $color-theme--light;
+      }
+    }
+  }
+
+  & > footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.16rem;
+    margin: auto;
+    width: 5.00rem;
+
+    .cards {
+      height: 0.8rem;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      margin: 0 0.04rem;
+      flex-grow: 1;
+      max-width: 0.50rem;
+      transition: 300ms;
+      cursor: pointer;
+
+      &:hover,
+      &:last-child {
+        flex-grow: 5;
+
+        .ui-card {
+          z-index: 1;
+        }
+      }
+
+      &--on {
+        transform: translateY(-0.4rem);
+      }
+    }
+
+    .ui-card {
+      position: absolute;
+    }
+  }
+}

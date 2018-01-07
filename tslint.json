@@ -1,0 +1,22 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "quotemark": [
+      true,
+      "single",
+      "jsx-double"
+    ],
+    "member-access": [
+      false,
+      "no-public"
+    ],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "uppercase-first",
+        "named-imports-order": "uppercase-first"
+      }
+    ],
+    "object-literal-sort-keys": false
+  }
+}

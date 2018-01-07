@@ -1,0 +1,12 @@
+@import "colors";
+@import "shadow";
+
+.page-lobby {
+  & > section {
+    display: flex;
+
+    & > label {
+      font-size: 0.16rem;
+    }
+  }
+}

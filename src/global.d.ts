@@ -1,0 +1,1 @@
+declare const ENV: "develop" | "release" | "product"

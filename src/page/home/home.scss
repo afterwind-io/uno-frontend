@@ -1,0 +1,43 @@
+@import "colors";
+
+.page-home {
+  padding: 0.16rem 0.16rem 0 0.16rem;
+  display: flex;
+  flex-direction: column;
+
+  & > header {
+    flex: 0 1;
+    margin-bottom: 0.16rem;
+  }
+
+  & > main {
+    flex: 1 1;
+  }
+
+  & > footer {
+    flex: 0 0 0.60rem;
+  }
+
+  .menu-bar {
+    height: 0.60rem;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .menu-item {
+    font-size: 0.36rem;
+    padding: 0 0.08rem;
+    color: $color-text--light;
+    cursor: pointer;
+    transition: 300ms;
+
+    &:hover {
+      color: $color-text--dark;
+    }
+
+    &--focused {
+      color: $color-text--dark;
+      text-shadow: 0 1px 2px $color-text--light;
+    }
+  }
+}
