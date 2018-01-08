@@ -8,18 +8,17 @@ import { Card, CardColor, CardSymbol } from 'model/card';
 import UICard from 'ui/card';
 import RollingTable from './component/rollingTable';
 import RollingGuest from './component/rollingGuest';
-import { UNOSnapshot, nextStateCache } from 'store/uno';
+import { UNOSnapshot, nextStateCache, UNOAction } from 'store/uno';
 
 function timer(timespan: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(() => { resolve(); }, timespan);
-  });
+  return new Promise((resolve) => setTimeout(resolve, timespan));
 }
 
 @Component
 export default class PageGame extends Vue {
   // private pointer = 1;
   private dealHandler = null;
+  private lastCard = new Card(CardColor.None, CardSymbol.None);
 
   get color(): CardColor {
     return this.$store.getters.color;
@@ -63,6 +62,7 @@ export default class PageGame extends Vue {
     // return [0, 1];
     return this.$store.getters.players;
   }
+
   get myCards(): Card[] {
     return this.$store.getters.myCards;
   }
@@ -74,24 +74,50 @@ export default class PageGame extends Vue {
     });
   }
 
-  async mounted() {
-    Anime({
-      targets: '#debug',
-      translateX: [
-        { value: 100, duration: 1200 },
-        { value: 0, duration: 800 }
+  animationTakeCard(): Promise<void> {
+    return Anime({
+      targets: '#spirit-last-deal',
+      scale: [
+        { value: 1, duration: 0 },
+        { value: 0, duration: 1500 },
       ],
-      rotate: '1turn',
-      backgroundColor: '#FFF',
-      duration: 2000,
-      loop: true
-    });
+      translateY: [
+        { value: '40vh', duration: 0 },
+        { value: 0, duration: 1500 },
+      ],
+      opacity: [
+        { value: 1, duration: 0 },
+        { value: 0, duration: 1500 },
+      ],
+      elasticity: 0,
+    }).finished;
+  }
 
+  animationDealCard(): Promise<void> {
+    return Anime({
+      targets: '#spirit-last-deal',
+      scale: [
+        { value: 0, duration: 0 },
+        { value: 1, duration: 1500 },
+      ],
+      translateY: [
+        { value: 0, duration: 0 },
+        { value: '40vh', duration: 1500 },
+      ],
+      opacity: [
+        { value: 0, duration: 0 },
+        { value: 1, duration: 1500 },
+      ],
+      elasticity: 0,
+    }).finished;
+  }
+
+  async mounted() {
     while (this.turns < 1000) {
       const snapshot: UNOSnapshot = nextStateCache();
 
       if (snapshot === void 0) {
-        await timer(2000);
+        await timer(100);
         continue;
       }
 
@@ -100,8 +126,23 @@ export default class PageGame extends Vue {
         this.$store.commit('update', snapshot);
       }
 
-      await timer(2000);
+      switch (snapshot.action) {
+        case UNOAction.TakePenalty:
+          this.lastCard = Card.Blank;
+          await this.animationTakeCard();
+          break;
+
+        case UNOAction.Continue:
+          this.lastCard = snapshot.lastCard;
+          await this.animationDealCard();
+          break;
+
+        default:
+          break;
+      }
+
       this.$store.commit('update', snapshot);
+      await timer(2000);
     }
   }
 
@@ -134,6 +175,10 @@ export default class PageGame extends Vue {
           turns: <span>{this.turns}</span>;<br />
           direction: <span>{this.direction}</span>;<br />
         </p>
+
+        <UICard
+          id="spirit-last-deal"
+          card={this.lastCard}></UICard>
 
         <RollingTable guests={this.players} pointer={this.pointer}></RollingTable>
 

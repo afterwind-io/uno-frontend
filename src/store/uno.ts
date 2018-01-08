@@ -51,7 +51,7 @@ interface UNOStateMachine {
   myCards: Card[];
 }
 
-const enum UNOAction {
+export const enum UNOAction {
   Continue = 'continue',
   CallColor = 'callColor',
   ReturnPenalty = 'returnPenalty',
@@ -161,7 +161,9 @@ const store: StoreOptions<UNOStateMachine> = {
     async deal({ commit, state }, payload: { roomId: string, deals: Card[] }) {
       await WebsocketService.send('game/call', payload);
     },
-    async cacheState({ commit, state }, snapshot: UNOSnapshot) {
+    async cacheState({ commit, state }, snapshot: any) {
+      snapshot.lastCard = new Card(snapshot.lastCard.color, snapshot.lastCard.symbol)
+
       snapshotCache.push(snapshot);
     },
   },

@@ -241,6 +241,18 @@ export class Card {
   }
 
   /**
+   * 创建一张空白卡牌
+   * 
+   * @readonly
+   * @static
+   * @type {Card}
+   * @memberof Card
+   */
+  static get Blank(): Card {
+    return new Card(CardColor.None, CardSymbol.None);
+  }
+
+  /**
    * 创建一张代表VirtualCardSymbol.PenaltyBack的牌
    *
    * PenaltyBack: 返回罚牌（被罚牌后立即出罚牌）
