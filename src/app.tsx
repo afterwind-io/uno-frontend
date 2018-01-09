@@ -2,11 +2,13 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import './app.scss';
 import { WebsocketService } from 'service';
+import * as UNO from 'store/uno';
 
 @Component
 export default class App extends Vue {
   mounted() {
-    WebsocketService.on('game/ready', () => {
+    WebsocketService.on('game/ready', (roomId: string) => {
+      this.$store.commit('setRoomId', roomId)
       this.$router.push('game');
     });
 
@@ -15,7 +17,7 @@ export default class App extends Vue {
     });
 
     WebsocketService.on('game/update', (snapshot: any) => {
-      this.$store.dispatch('cacheState', snapshot)
+      UNO.cacheSnapshot(snapshot);
     });
   }
 

@@ -1,19 +1,19 @@
 import Vue from 'vue';
-import { StoreOptions } from 'vuex';
+import { Module } from 'vuex';
 import { WebsocketService } from 'service';
 import { Card, CardColor, CardSymbol } from 'model/card';
 
 type UNOMode = '胜者为王' | '赢者通吃' | '大隐于市';
 
-export interface UNOSnapshot {
+export interface UnoSnapshot {
   color: CardColor;
   symbol: CardSymbol;
   d2: boolean;
   d4: boolean;
-  lastCard: Card;
+  lastCards: Card[];
   pointer: number;
   penaltyCount: number;
-  action: UNOAction;
+  action: UnoAction;
   turns: number;
   direction: number;
   players: UnoPlayer[];
@@ -27,7 +27,7 @@ export interface UnoPlayer {
   score: number;
 }
 
-interface UNOStateMachine {
+interface IStoreUno {
 
   // 当前场次
   round: number;
@@ -43,15 +43,16 @@ interface UNOStateMachine {
 
   pointer: number;
   penaltyCount: number;
-  action: UNOAction;
+  action: UnoAction;
   turns: number;
   direction: number;
 
   players: UnoPlayer[];
   myCards: Card[];
+  lastCards: Card[];
 }
 
-export const enum UNOAction {
+export const enum UnoAction {
   Continue = 'continue',
   CallColor = 'callColor',
   ReturnPenalty = 'returnPenalty',
@@ -61,13 +62,39 @@ export const enum UNOAction {
 }
 
 // 状态缓冲池
-const snapshotCache: UNOSnapshot[] = [];
+const snapshotCache: UnoSnapshot[] = [];
+let snapshotPromise: (snapshot: UnoSnapshot) => void
 
-export function nextStateCache(): UNOSnapshot {
-  return snapshotCache.shift()
+/**
+ * 缓冲snapshot
+ *
+ * @export
+ * @param {*} snapshot 服务器发送的游戏状态快照
+ */
+export async function cacheSnapshot(snapshot: any) {
+  snapshot.lastCards = snapshot.lastCards.map(
+    (card) => new Card(card.color, card.symbol),
+  );
+
+  if (snapshotPromise !== void 0) {
+    snapshotPromise(snapshot);
+    snapshotPromise = void 0;
+  } else {
+    snapshotCache.push(snapshot);
+  }
 }
 
-const store: StoreOptions<UNOStateMachine> = {
+export async function nextSnapshot(): Promise<UnoSnapshot> {
+  if (snapshotCache.length !== 0) {
+    return snapshotCache.shift();
+  } else {
+    return new Promise<UnoSnapshot>((resolve) => {
+      snapshotPromise = resolve;
+    });
+  }
+}
+
+const store: Module<IStoreUno, any> = {
   state: {
     round: 0,
     maxRound: 0,
@@ -79,11 +106,12 @@ const store: StoreOptions<UNOStateMachine> = {
     d4: false,
     pointer: 0,
     penaltyCount: 0,
-    action: UNOAction.Continue,
+    action: UnoAction.Continue,
     turns: 0,
     direction: 1,
     players: [],
     myCards: [],
+    lastCards: [],
   },
   getters: {
     color(state): CardColor {
@@ -104,7 +132,7 @@ const store: StoreOptions<UNOStateMachine> = {
     penaltyCount(state): number {
       return state.penaltyCount;
     },
-    action(state): UNOAction {
+    action(state): UnoAction {
       return state.action;
     },
     turns(state): number {
@@ -122,23 +150,24 @@ const store: StoreOptions<UNOStateMachine> = {
     myCards(state): Card[] {
       return state.myCards;
     },
+    lastCards(state): Card[] {
+      return state.lastCards;
+    },
   },
   mutations: {
-    update(state, snapshot: UNOSnapshot) {
+    update(state, snapshot: UnoSnapshot) {
       if (snapshot === void 0) return;
 
       state.color = snapshot.color;
       state.symbol = snapshot.symbol;
       state.d2 = snapshot.d2;
       state.d4 = snapshot.d4;
-      // state.lastCard = snapshot.lastCard;
+      state.lastCards = snapshot.lastCards;
       state.pointer = snapshot.pointer;
       state.penaltyCount = snapshot.penaltyCount;
       state.action = snapshot.action;
       state.turns = snapshot.turns;
       state.direction = snapshot.direction;
-
-      console.log(state.pointer);
 
       if (state.players.length === 0) {
         state.players = snapshot.players;
@@ -160,11 +189,6 @@ const store: StoreOptions<UNOStateMachine> = {
   actions: {
     async deal({ commit, state }, payload: { roomId: string, deals: Card[] }) {
       await WebsocketService.send('game/call', payload);
-    },
-    async cacheState({ commit, state }, snapshot: any) {
-      snapshot.lastCard = new Card(snapshot.lastCard.color, snapshot.lastCard.symbol)
-
-      snapshotCache.push(snapshot);
     },
   },
 };

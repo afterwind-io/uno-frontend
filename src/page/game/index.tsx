@@ -8,9 +8,9 @@ import { Card, CardColor, CardSymbol } from 'model/card';
 import UICard from 'ui/card';
 import RollingTable from './component/rollingTable';
 import RollingGuest from './component/rollingGuest';
-import { UNOSnapshot, nextStateCache, UNOAction } from 'store/uno';
+import { UnoSnapshot, nextSnapshot, UnoAction } from 'store/uno';
 
-function timer(timespan: number): Promise<void> {
+function sleep(timespan: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, timespan));
 }
 
@@ -18,7 +18,9 @@ function timer(timespan: number): Promise<void> {
 export default class PageGame extends Vue {
   // private pointer = 1;
   private dealHandler = null;
-  private lastCard = new Card(CardColor.None, CardSymbol.None);
+  private selectedCards: Card[] = [];
+  private lastCard: Card = new Card(CardColor.None, CardSymbol.None);
+  private lastCardCount: number = 1;
 
   get color(): CardColor {
     return this.$store.getters.color;
@@ -67,11 +69,27 @@ export default class PageGame extends Vue {
     return this.$store.getters.myCards;
   }
 
-  deal() {
-    this.$store.dispatch('deal', {
-      roomId: '',
-      deals: [],
-    });
+  hasCardSelected(card: Card): boolean {
+    return this.selectedCards.includes(card);
+  }
+
+  switchSelection(card: Card) {
+    if (this.selectedCards.includes(card)) {
+      const index = this.selectedCards.findIndex((selected) => selected.isSameCard(card));
+      this.selectedCards.splice(index, 1);
+    } else {
+      this.selectedCards.push(card);
+    }
+  }
+
+  async deal() {
+    const roomId = this.$store.getters.roomId;
+    const deals = this.selectedCards;
+
+    await WebsocketService.send('game/deal', { roomId, deals });
+
+    this.$store.commit('toss', deals);
+    this.selectedCards = [];
   }
 
   animationTakeCard(): Promise<void> {
@@ -114,26 +132,33 @@ export default class PageGame extends Vue {
 
   async mounted() {
     while (this.turns < 1000) {
-      const snapshot: UNOSnapshot = nextStateCache();
+      // TODO: 显示思考动画
+
+      // 获取下一个状态快照
+      const snapshot: UnoSnapshot = await nextSnapshot();
+
+      // TODO: 关闭思考动画
 
       if (snapshot === void 0) {
-        await timer(100);
+        await sleep(100);
         continue;
       }
 
       if (this.turns === 0) {
-        await timer(2000);
         this.$store.commit('update', snapshot);
+        await sleep(2000);
+        continue;
       }
 
       switch (snapshot.action) {
-        case UNOAction.TakePenalty:
+        case UnoAction.TakePenalty:
           this.lastCard = Card.Blank;
           await this.animationTakeCard();
           break;
 
-        case UNOAction.Continue:
-          this.lastCard = snapshot.lastCard;
+        case UnoAction.Continue:
+          this.lastCard = snapshot.lastCards[0];
+          this.lastCardCount = snapshot.lastCards.length;
           await this.animationDealCard();
           break;
 
@@ -142,8 +167,15 @@ export default class PageGame extends Vue {
       }
 
       this.$store.commit('update', snapshot);
-      await timer(2000);
+      await sleep(2000);
     }
+  }
+
+  calCardClass(card: Card) {
+    return {
+      'card': true,
+      'card--on': this.hasCardSelected(card),
+    };
   }
 
   public render(h) {
@@ -164,7 +196,7 @@ export default class PageGame extends Vue {
             }
           }} /> */}
 
-        <p id="debug" style="position: absolute; z-index: 2; font-size: 0.16rem;">
+        <p id="debug" style="position: absolute; z-index: 2; font-size: 0.12rem; bottom: 0;">
           color: <span>{this.color}</span>;<br />
           symbol: <span>{this.symbol}</span>;<br />
           d2: <span>{this.d2.toString()}</span>;<br />
@@ -174,6 +206,8 @@ export default class PageGame extends Vue {
           action: <span>{this.action}</span>;<br />
           turns: <span>{this.turns}</span>;<br />
           direction: <span>{this.direction}</span>;<br />
+          <br />
+          selectedCards: <span>{this.selectedCards.reduce((str, card) => str + ' ' + card.toAbbr(), '')}</span>
         </p>
 
         <UICard
@@ -183,9 +217,14 @@ export default class PageGame extends Vue {
         <RollingTable guests={this.players} pointer={this.pointer}></RollingTable>
 
         <footer>
+          <p onClick={() => this.deal()} style="position: absolute; left: -0.50rem; font-size: 0.24rem;">DEAL</p>
+
           <div class="cards">
             {this.myCards.map((card) =>
-              <div class="card">
+              <div
+                class={this.calCardClass(card)}
+                onClick={() => this.switchSelection(card)}>
+
                 <UICard card={card}></UICard>
               </div>)
             }
