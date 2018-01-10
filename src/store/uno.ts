@@ -75,6 +75,7 @@ export async function cacheSnapshot(snapshot: any) {
   snapshot.lastCards = snapshot.lastCards.map(
     (card) => new Card(card.color, card.symbol),
   );
+  // snapshot.players.foreach(player => player.lastDeal = new Card())
 
   if (snapshotPromise !== void 0) {
     snapshotPromise(snapshot);
@@ -84,6 +85,12 @@ export async function cacheSnapshot(snapshot: any) {
   }
 }
 
+/**
+ * 从缓冲中获取一个状态快照
+ *
+ * @export
+ * @returns {Promise<UnoSnapshot>} 包含状态快照的Promise
+ */
 export async function nextSnapshot(): Promise<UnoSnapshot> {
   if (snapshotCache.length !== 0) {
     return snapshotCache.shift();

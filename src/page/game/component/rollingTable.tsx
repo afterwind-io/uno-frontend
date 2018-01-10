@@ -57,6 +57,7 @@ export default class RollingTable extends Vue {
 
   @Watch('pointer')
   onPointerChanged(now: number, last: number) {
+    // return (this.pointer + this.direction * step + this.playerCount) % this.playerCount
     const length = this.guests.length;
     let polyfill;
     let direction;

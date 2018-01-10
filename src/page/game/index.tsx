@@ -1,14 +1,14 @@
 import Vue, { VNode } from 'vue';
 import { Component } from 'vue-property-decorator';
-import Anime from 'animejs';
 import './game.scss';
+import { UnoSnapshot, nextSnapshot, UnoAction, UnoPlayer } from 'store/uno';
 import * as VuexHelper from 'store/util';
 import { WebsocketService } from 'service';
 import { Card, CardColor, CardSymbol } from 'model/card';
 import UICard from 'ui/card';
 import RollingTable from './component/rollingTable';
 import RollingGuest from './component/rollingGuest';
-import { UnoSnapshot, nextSnapshot, UnoAction } from 'store/uno';
+import * as Animation from './animation';
 
 function sleep(timespan: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, timespan));
@@ -21,6 +21,7 @@ export default class PageGame extends Vue {
   private selectedCards: Card[] = [];
   private lastCard: Card = new Card(CardColor.None, CardSymbol.None);
   private lastCardCount: number = 1;
+  private isShowColorSelector: boolean = false;
 
   get color(): CardColor {
     return this.$store.getters.color;
@@ -59,7 +60,7 @@ export default class PageGame extends Vue {
     return this.$store.getters.direction;
   }
 
-  get players(): any[] {
+  get players(): UnoPlayer[] {
     // return [0, 1, 2, 3, 4];
     // return [0, 1];
     return this.$store.getters.players;
@@ -69,7 +70,12 @@ export default class PageGame extends Vue {
     return this.$store.getters.myCards;
   }
 
-  hasCardSelected(card: Card): boolean {
+  isMyTurn(pointer: number): boolean {
+    const playerName = this.players[pointer].name;
+    return playerName === this.$store.getters.user.name;
+  }
+
+  isCardSelected(card: Card): boolean {
     return this.selectedCards.includes(card);
   }
 
@@ -92,42 +98,28 @@ export default class PageGame extends Vue {
     this.selectedCards = [];
   }
 
-  animationTakeCard(): Promise<void> {
-    return Anime({
-      targets: '#spirit-last-deal',
-      scale: [
-        { value: 1, duration: 0 },
-        { value: 0, duration: 1500 },
-      ],
-      translateY: [
-        { value: '40vh', duration: 0 },
-        { value: 0, duration: 1500 },
-      ],
-      opacity: [
-        { value: 1, duration: 0 },
-        { value: 0, duration: 1500 },
-      ],
-      elasticity: 0,
-    }).finished;
+  async pass() {
+    const roomId = this.$store.getters.roomId;
+    return WebsocketService.send('game/deal', { roomId, deals: [Card.Pass] });
   }
 
-  animationDealCard(): Promise<void> {
-    return Anime({
-      targets: '#spirit-last-deal',
-      scale: [
-        { value: 0, duration: 0 },
-        { value: 1, duration: 1500 },
-      ],
-      translateY: [
-        { value: 0, duration: 0 },
-        { value: '40vh', duration: 1500 },
-      ],
-      opacity: [
-        { value: 0, duration: 0 },
-        { value: 1, duration: 1500 },
-      ],
-      elasticity: 0,
-    }).finished;
+  async takePenalties() {
+    const roomId = this.$store.getters.roomId;
+    return WebsocketService.send('game/deal', { roomId, deals: [Card.PenaltyOver] });
+  }
+
+  async pickColor(color: CardColor) {
+    const roomId = this.$store.getters.roomId;
+    const deals = [Card.PickColor(color)];
+
+    await WebsocketService.send('game/deal', { roomId, deals });
+
+    this.isShowColorSelector = false;
+  }
+
+  async skipped() {
+    const roomId = this.$store.getters.roomId;
+    return WebsocketService.send('game/deal', { roomId, deals: [Card.Skip] });
   }
 
   async mounted() {
@@ -139,31 +131,77 @@ export default class PageGame extends Vue {
 
       // TODO: 关闭思考动画
 
-      if (snapshot === void 0) {
-        await sleep(100);
-        continue;
-      }
-
       if (this.turns === 0) {
         this.$store.commit('update', snapshot);
         await sleep(2000);
         continue;
       }
 
-      switch (snapshot.action) {
-        case UnoAction.TakePenalty:
-          this.lastCard = Card.Blank;
-          await this.animationTakeCard();
-          break;
+      if (this.isMyTurn(snapshot.pointer)) {
+        switch (snapshot.action) {
+          case UnoAction.Continue:
+            const legalCards = this.myCards.filter((card) => card.isLegal(
+              snapshot.color, snapshot.symbol, snapshot.d2, snapshot.d4,
+            ));
 
-        case UnoAction.Continue:
-          this.lastCard = snapshot.lastCards[0];
-          this.lastCardCount = snapshot.lastCards.length;
-          await this.animationDealCard();
-          break;
+            if (legalCards.length === 0) {
+              await this.pass();
+            } else {
 
-        default:
-          break;
+            }
+
+            break;
+
+          case UnoAction.CallColor:
+            this.isShowColorSelector = true;
+            break;
+
+          case UnoAction.TakePenalty:
+            /**
+             * TODO
+             *
+             * 判断是否可以返回罚牌，
+             * 如果可以提示是否出牌，
+             * 否则自动跳过
+             */
+            await this.takePenalties();
+            break;
+
+          case UnoAction.ReturnPenalty:
+            break;
+
+          case UnoAction.Skipped:
+            /**
+             * TODO
+             *
+             * 如果有合法的Skip提示是否出牌，
+             * 否则显示被跳过的动画
+             */
+            await this.skipped();
+            break;
+
+          case UnoAction.Challenge:
+            break;
+
+          default:
+            break;
+        }
+      } else {
+        switch (snapshot.action) {
+          case UnoAction.TakePenalty:
+            this.lastCard = Card.Blank;
+            await Animation.takeCard();
+            break;
+
+          case UnoAction.Continue:
+            this.lastCard = snapshot.lastCards[0];
+            this.lastCardCount = snapshot.lastCards.length;
+            await Animation.dealCard();
+            break;
+
+          default:
+            break;
+        }
       }
 
       this.$store.commit('update', snapshot);
@@ -174,27 +212,13 @@ export default class PageGame extends Vue {
   calCardClass(card: Card) {
     return {
       'card': true,
-      'card--on': this.hasCardSelected(card),
+      'card--on': this.isCardSelected(card),
     };
   }
 
   public render(h) {
     return (
       <div class="page-game">
-        {/* <input
-          style="position: absolute; z-index: 2"
-          type="number"
-          value={this.pointer}
-          onInput={(e) => {
-            const num = parseInt(e.target.value);
-            if (num === this.players.length) {
-              this.pointer = 0;
-            } else if (num === -1) {
-              this.pointer = this.players.length - 1;
-            } else {
-              this.pointer = num;
-            }
-          }} /> */}
 
         <p id="debug" style="position: absolute; z-index: 2; font-size: 0.12rem; bottom: 0;">
           color: <span>{this.color}</span>;<br />
@@ -218,6 +242,14 @@ export default class PageGame extends Vue {
 
         <footer>
           <p onClick={() => this.deal()} style="position: absolute; left: -0.50rem; font-size: 0.24rem;">DEAL</p>
+          <p onClick={() => this.pass()} style="position: absolute; left: -0.50rem; top: 0.24rem; font-size: 0.24rem;">PASS</p>
+
+          {this.isShowColorSelector && <div class="colors">
+            <p onClick={() => this.pickColor(CardColor.Red)}>红色</p>
+            <p onClick={() => this.pickColor(CardColor.Yellow)}>黄色</p>
+            <p onClick={() => this.pickColor(CardColor.Green)}>绿色</p>
+            <p onClick={() => this.pickColor(CardColor.Blue)}>蓝色</p>
+          </div>}
 
           <div class="cards">
             {this.myCards.map((card) =>
@@ -228,27 +260,6 @@ export default class PageGame extends Vue {
                 <UICard card={card}></UICard>
               </div>)
             }
-            {/* <div class="card">
-              <UICard card={new Card(CardColor.Blue, CardSymbol.c6)}></UICard>
-            </div>
-            <div class="card">
-              <UICard card={new Card(CardColor.Blue, CardSymbol.c6)}></UICard>
-            </div>
-            <div class="card">
-              <UICard card={new Card(CardColor.Blue, CardSymbol.c6)}></UICard>
-            </div>
-            <div class="card">
-              <UICard card={new Card(CardColor.Blue, CardSymbol.c6)}></UICard>
-            </div>
-            <div class="card card--on">
-              <UICard card={new Card(CardColor.Blue, CardSymbol.c6)}></UICard>
-            </div>
-            <div class="card">
-              <UICard card={new Card(CardColor.Blue, CardSymbol.c6)}></UICard>
-            </div>
-            <div class="card">
-              <UICard card={new Card(CardColor.Blue, CardSymbol.c6)}></UICard>
-            </div> */}
           </div>
         </footer>
 

@@ -20,7 +20,7 @@ class WebsocketService {
   private queue: Set<string> = new Set();
   private ws: SocketIOClient.Socket;
   private token: string = '';
-  private lazyEvents: IEventOption<any>[] = []
+  private lazyEvents: Array<IEventOption<any>> = [];
 
   get socketId(): string {
     return this.ws.id;
@@ -28,7 +28,7 @@ class WebsocketService {
 
   public connect(): void {
     this.ws = io(Config.host);
-    this.registerLazyEvents()
+    this.registerLazyEvents();
   }
 
   public disconnect(): void {
@@ -41,7 +41,7 @@ class WebsocketService {
   }
 
   public send<T = any>(api: string, param: any = ''): Promise<T> {
-    if (this.queue.has(api)) throw new Error();
+    // if (this.queue.has(api)) throw new Error();
 
     return new Promise((resolve, reject) => {
       this.queue.add(api);
@@ -60,7 +60,7 @@ class WebsocketService {
     if (this.ws === void 0) {
       this.cacheLazyEventHanlder(event, handler, override);
     } else {
-      this.registerEventHandler(event, handler, override)
+      this.registerEventHandler(event, handler, override);
     }
   }
 
@@ -75,13 +75,13 @@ class WebsocketService {
   private cacheLazyEventHanlder(event: string, handler: (param: any) => void, override: boolean) {
     this.lazyEvents.push({
       event, handler, override
-    })
+    });
   }
 
   private registerLazyEvents() {
     if (this.lazyEvents.length !== 0) {
       this.lazyEvents.forEach((lasy) => {
-        this.registerEventHandler(lasy.event, lasy.handler, lasy.override)
+        this.registerEventHandler(lasy.event, lasy.handler, lasy.override);
       });
     }
     this.lazyEvents = [];

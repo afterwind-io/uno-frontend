@@ -6,14 +6,10 @@ import WebsocketService from 'service/websocket';
 @Component
 export default class PagePlay extends Vue {
   async startSingle() {
-    // WebsocketService.send('user/login', { anonymous: true });
-    // const { token, user, player } = await WebsocketService.send<any>('user/register', { username: 'doge', password: '123456' });
     WebsocketService.connect();
-    const { token, user, player } = await WebsocketService.send<any>('user/login', { username: 'doge', password: '123456' });
-    WebsocketService.setToken(token);
-    // await WebsocketService.send('user/detail', { uid: user.uid });
+    await this.$store.dispatch('login', { username: 'doge', password: '123456' });
     const { uid } = await WebsocketService.send<any>('room/create', {
-      owner: player.uid,
+      owner: this.$store.getters.player.uid,
       maxPlayer: 6,
       password: '6p',
       mode: '赢者通吃',

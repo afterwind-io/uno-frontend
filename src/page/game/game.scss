@@ -147,6 +147,20 @@
     margin: auto;
     width: 5.00rem;
 
+    .colors {
+      position: absolute;
+      width: 2rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-column-gap: 0.18rem;
+      top: -100%;
+
+      // top
+      p {
+        font-size: 0.18rem;
+      }
+    }
+
     .cards {
       height: 0.8rem;
       background-color: #fff;

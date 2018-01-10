@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import './landing.scss';
-import { UserService, WebsocketService } from 'service';
+import { WebsocketService } from 'service';
 
 @Component
 export default class PageLanding extends Vue {
@@ -37,7 +37,12 @@ export default class PageLanding extends Vue {
 
   async login(anonymous: boolean = false) {
     try {
-      await UserService.login(this.username, this.password);
+      await this.$store.dispatch('login', {
+        anonymous,
+        username: this.username,
+        password: this.password,
+      });
+
       this.$router.push('play');
     } catch (error) {
       // TODO
@@ -47,7 +52,11 @@ export default class PageLanding extends Vue {
 
   async register() {
     try {
-      await UserService.register(this.username, this.password);
+      await this.$store.dispatch('register', {
+        username: this.username,
+        password: this.password,
+      });
+
       this.$router.push('play');
     } catch (error) {
       // TODO
@@ -62,7 +71,7 @@ export default class PageLanding extends Vue {
           <div class="content-wrapper">
             <p class="logo">UNO</p>
             <p class="logo-sub">v1.0.0</p>
-            <p class="logo-summary">一个实验性的多人卡牌游戏{UserService.current.name}</p>
+            <p class="logo-summary">一个实验性的多人卡牌游戏</p>
             <div class="login-box">
               {/* <Input
                 value={this.username}
