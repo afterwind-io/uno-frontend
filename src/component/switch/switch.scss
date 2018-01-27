@@ -1,0 +1,37 @@
+.ui-switch {
+  position: relative;
+  width: 0.34rem;
+  height: 0.18rem;
+  display: flex;
+
+  &--on {
+    justify-content: flex-end;
+  }
+
+  &--off {
+    justify-content: flex-start;
+  }
+
+  .track {
+    position: absolute;
+    left: 0.01rem;
+    top: 0.01rem;
+    width: 0.32rem;
+    height: 0.16rem;
+    border-radius: 0.08rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.65) inset;
+
+    &--on {}
+
+    &--off {}
+  }
+
+  .switch {
+    width: 0.18rem;
+    height: 0.18rem;
+    border-radius: 50%;
+    background-color: rgb(247, 247, 247);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5), 0 0 1px 0 rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+}

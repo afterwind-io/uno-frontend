@@ -63,7 +63,7 @@ export const enum UnoAction {
 
 // 状态缓冲池
 const snapshotCache: UnoSnapshot[] = [];
-let snapshotPromise: (snapshot: UnoSnapshot) => void
+let snapshotPromise: (snapshot: UnoSnapshot) => void;
 
 /**
  * 缓冲snapshot
@@ -190,7 +190,10 @@ const store: Module<IStoreUno, any> = {
       state.myCards.push(...cards.map((card) => new Card(card.color, card.symbol)));
     },
     toss(state, cards: Card[]) {
-      state.myCards = state.myCards.filter((card) => !card.isSameCard(cards[0]));
+      cards.forEach((card) => {
+        const index = state.myCards.findIndex((mc) => mc.isSameCard(card));
+        state.myCards.splice(index, 1);
+      });
     },
   },
   actions: {

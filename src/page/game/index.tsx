@@ -216,9 +216,19 @@ export default class PageGame extends Vue {
     };
   }
 
+  get calPageClass() {
+    return {
+      'page-game': true,
+      'page-game--red': this.color === CardColor.Red,
+      'page-game--yellow': this.color === CardColor.Yellow,
+      'page-game--green': this.color === CardColor.Green,
+      'page-game--blue': this.color === CardColor.Blue,
+    };
+  }
+
   public render(h) {
     return (
-      <div class="page-game">
+      <div class={this.calPageClass}>
 
         <p id="debug" style="position: absolute; z-index: 2; font-size: 0.12rem; bottom: 0;">
           color: <span>{this.color}</span>;<br />

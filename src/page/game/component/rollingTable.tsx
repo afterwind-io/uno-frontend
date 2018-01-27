@@ -18,11 +18,9 @@ const DEFAULT_ANGLE = 20;
  */
 @Component
 export default class RollingTable extends Vue {
-  @Prop()
-  pointer: number;
+  @Prop() pointer: number;
 
-  @Prop()
-  guests: any[];
+  @Prop() guests: any[];
 
   @Prop({ default: 1000 })
   speed: number;
@@ -51,7 +49,7 @@ export default class RollingTable extends Vue {
         this.visibleGuest.unshift(void 0);
       }
 
-      Vue.nextTick(() => this.forceRerender = false);
+      Vue.nextTick(() => (this.forceRerender = false));
     }, 1100);
   }
 
@@ -94,33 +92,26 @@ export default class RollingTable extends Vue {
   getSeatStyle(index: number) {
     return {
       transform: `rotate(${DEFAULT_ANGLE * (index + this.delta) - 40}deg)`,
-      opacity: (index + this.delta) === 2 ? '1' : void 0,
+      opacity: index + this.delta === 2 ? '1' : void 0,
     };
   }
 
   getGuestStyle(index: number) {
     return {
-      transform: `rotate(${- DEFAULT_ANGLE * (index + this.delta) + 40}deg) scale(${(index + this.delta) === 2 ? 1.2 : 1})`,
+      transform: `rotate(${-DEFAULT_ANGLE * (index + this.delta) + 40}deg) scale(${index + this.delta === 2 ? 1.2 : 1})`,
     };
   }
 
   render() {
     return (
       <div class="ui-rollingTable">
-        <div class="guideline"></div>
+        <div class="guideline" />
 
         {this.visibleGuest.map((guest, index) => {
           return (
-            <div
-              class="seat"
-              style={this.getSeatStyle(index)}
-              key={this.forceRerender ? Math.random() : void 0} >
-
-              <div
-                class="guest"
-                style={this.getGuestStyle(index)}>
-
-                <RollingGuest player={guest}></RollingGuest>
+            <div class="seat" style={this.getSeatStyle(index)} key={this.forceRerender ? Math.random() : void 0}>
+              <div class="guest" style={this.getGuestStyle(index)}>
+                <RollingGuest player={guest} />
               </div>
             </div>
           );

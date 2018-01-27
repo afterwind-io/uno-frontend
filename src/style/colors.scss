@@ -7,9 +7,11 @@ $color-theme--light: lighten(orange, 30%);
 
 // $color-background--normal: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
 
-$color-background--normal: linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%);
+// $color-background--normal: linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%);
 
 // $color-background--normal: linear-gradient(135deg, rgb(255, 255, 245) 0%, rgb(219, 191, 136) 100%);
+
+$color-background--normal: #F5F3F9;
 
 $color-text--dark: rgba(24, 21, 17, 0.8);
 $color-text--light: rgba(24, 21, 17, 0.5);
