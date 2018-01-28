@@ -1,0 +1,9 @@
+{
+  "prettier.disableLanguages": ["typescript", "typescriptreact"]
+  // "emmet.syntaxProfiles": {
+  //   "typescriptreact": "html",
+  //   "html": {
+  //     "attr_quotes": "single"
+  //   }
+  // },
+}

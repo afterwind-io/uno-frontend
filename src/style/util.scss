@@ -1,0 +1,14 @@
+@mixin test {
+  background-color: rgba(255, 0, 255, 0.1);
+}
+
+@mixin basic-icon {
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@mixin flex-center-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

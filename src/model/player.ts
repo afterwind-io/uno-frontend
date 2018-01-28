@@ -89,3 +89,14 @@ export interface Player {
    */
   roomId: string;
 }
+
+export const DEFUALT_PLAYER: Player = {
+  uid: '',
+  name: 'Hoshimiya ichigo',
+  avatar: '',
+  anonymous: false,
+  type: 'human',
+  socketId: '',
+  status: PlayerStatus.idle,
+  roomId: '0',
+};

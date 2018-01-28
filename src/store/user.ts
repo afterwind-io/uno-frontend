@@ -1,7 +1,8 @@
 import { Module } from 'vuex';
 import User from '../model/user';
-import { Player } from '../model/player';
+import { Player, DEFUALT_PLAYER } from '../model/player';
 import { WebsocketService } from 'service';
+import { deepclone } from 'util/common';
 
 interface IStoreUser {
   user: User;
@@ -18,7 +19,7 @@ export interface IParamRegister extends IParamLogin { }
 export const userInfo: Module<IStoreUser, any> = {
   state: {
     user: null,
-    player: null,
+    player: deepclone(DEFUALT_PLAYER),
   },
   getters: {
     user(state): User {

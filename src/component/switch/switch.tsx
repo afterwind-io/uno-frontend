@@ -3,7 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import './switch.scss';
 
 @Component
-export default class Switch extends Vue {
+export default class UiSwitch extends Vue {
   @Prop()
   value: boolean;
 
@@ -12,25 +12,28 @@ export default class Switch extends Vue {
 
   get classWrapper() {
     return {
-      'ui-switch': true,
-      'ui-switch--on': this.value,
-      'ui-switch--off': !this.value,
+      'switch-wrapper': true,
+      'switch-wrapper--on': this.value,
+      'switch-wrapper--off': !this.value,
     };
   }
 
-  get classSwitch() {
-    return {
-      'switch': true,
-      'switch--on': this.value,
-      'switch--off': !this.value,
-    };
+  onSwitched() {
+    this.changed && this.changed(!this.value);
   }
 
   render(h) {
     return (
-      <div class={this.classWrapper}>
-        <div class="track" />
-        <div class={this.classSwitch} />
+      <div
+        class="ui-switch"
+        onClick={this.onSwitched}>
+
+        <div class={this.classWrapper}>
+          <div class="track" />
+          <div class="switch" />
+        </div>
+
+        <p class="label">{this.$slots.default}</p>
       </div>
     );
   }

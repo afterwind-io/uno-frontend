@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 
 const PageLanding = () => import(/* webpackChunkName: "landing" */'page/landing');
 const PageHome = () => import(/* webpackChunkName: "home" */'page/home');
+const PageNews = () => import(/* webpackChunkName: "news" */'page/subs/news');
 const PageLobby = () => import(/* webpackChunkName: "home" */'page/subs/lobby');
 const PagePlay = () => import(/* webpackChunkName: "play" */'page/subs/play');
 const PageRoom = () => import(/* webpackChunkName: "room" */'page/room');
@@ -21,14 +22,19 @@ const router = new VueRouter({
       component: PageHome,
       children: [
         {
-          path: '/play',
-          name: 'play',
-          component: PagePlay,
+          path: '/news',
+          name: 'news',
+          component: PageNews,
         },
         {
           path: '/lobby',
           name: 'lobby',
           component: PageLobby,
+        },
+        {
+          path: '/play',
+          name: 'play',
+          component: PagePlay,
         },
       ],
     },

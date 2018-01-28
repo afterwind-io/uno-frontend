@@ -1,25 +1,156 @@
 @import "colors";
+@import "shadow";
+@import "anime";
+@import "util";
 
 .page-home {
-  padding: 0.16rem 0.16rem 0 0.16rem;
   display: flex;
   flex-direction: column;
 
   & > header {
-    flex: 0 1;
+    @include flex-center-container;
+
+    position: relative;
+    flex: 0 0 0.8rem;
+    padding: 0 0.16rem;
     margin-bottom: 0.16rem;
+    justify-content: space-between;
+
+    .logo-box {
+      display: flex;
+      align-items: flex-start;
+
+      .logo {
+        @include basic-icon;
+
+        position: relative;
+        width: 1.5rem;
+        height: 0.48rem;
+
+        svg {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          fill: $color-text--dark;
+        }
+      }
+
+      .version {
+        padding: 0 0.08rem;
+        font-size: 0.12rem;
+        line-height: 0.16rem;
+        color: $color-text--light;
+      }
+    }
+
+    .route-box {
+      @include flex-center-container;
+
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 8rem;
+      align-items: flex-end;
+
+      a {
+        position: relative;
+        padding: 0 0.32rem;
+        text-decoration: none;
+        font-size: 0.24rem;
+        line-height: 0.48rem;
+        color: $color-text--light;
+
+        &::before {
+          @include basic-transition;
+
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          transform: translate(-50%, 150%);
+          width: 100%;
+          height: 0.04rem;
+          width: 0.04rem;
+          border-radius: 50%;
+          background-color: orange;
+          opacity: 0;
+        }
+      }
+
+      .router-link-active {
+        font-weight: 500;
+        color: $color-text--dark;
+
+        &::before {
+          opacity: 1;
+          transform: translate(-50%, 0);
+        }
+      }
+
+      .button-play {
+        @include shadow-dp--2(orange);
+
+        position: relative;
+        top: 0.16rem;
+        width: 1.6rem;
+        height: 0.8rem;
+        margin: 0 0.08rem;
+        background-color: orange;
+        font-size: 0.3rem;
+        color: white;
+        line-height: 0.8rem;
+        text-align: center;
+        border-radius: 0.08rem;
+        cursor: pointer;
+      }
+    }
+
+    .profile-avatar {
+      width: 0.56rem;
+      height: 0.56rem;
+      border-radius: 50%;
+      background: url(./asset/avatar.png) center no-repeat;
+      background-size: contain;
+      cursor: pointer;
+      transform-origin: right top;
+      transition: 300ms;
+
+      &:hover {
+        @include shadow-card;
+      }
+    }
+
+    .pending-status {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0.1rem;
+      display: flex;
+      justify-content: center;
+
+      .pending-member {
+        margin: 0 0.05rem;
+        width: 0.05rem;
+        height: 0.05rem;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.2);
+        transition: 300ms;
+
+        &--online {
+          background-color: white;
+        }
+      }
+    }
   }
 
   & > main {
     flex: 1 1;
   }
 
-  & > footer {
-    flex: 0 0 0.60rem;
-  }
-
   .menu-bar {
-    height: 0.60rem;
+    height: 0.6rem;
     display: flex;
     align-items: flex-end;
   }
@@ -38,6 +169,22 @@
     &--focused {
       color: $color-text--dark;
       text-shadow: 0 1px 2px $color-text--light;
+    }
+  }
+
+  .route {
+    &-enter-active,
+    &-leave-active {
+      @include basic-transition;
+
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    &-enter,
+    &-leave-to {
+      opacity: 0;
+      transform: scale(0.95, 0.95);
     }
   }
 }

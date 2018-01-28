@@ -11,10 +11,12 @@
 }
 
 input {
-  font-family: 'NotoSansHans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', '黑体';
+  font-family: "NotoSansHans", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei UI", "Microsoft YaHei", "黑体";
 }
 
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 
@@ -25,12 +27,14 @@ a:link {
 
 html {
   font-size: 13vh;
-  font-family: 'NotoSansHans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', '黑体';
+  font-family: "NotoSansHans", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei UI", "Microsoft YaHei", "黑体";
 }
 
 body {
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   background: $color-background--normal;
   color: $color-text--dark;
 }

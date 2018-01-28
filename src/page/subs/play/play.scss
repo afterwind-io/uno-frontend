@@ -1,41 +1,53 @@
 @import "colors";
 @import "shadow";
+@import "anime";
+@import "util";
 
 .page-play {
+  @include flex-center-container;
+
   .title {
     margin-bottom: 0.32rem;
-    font-size: 0.80rem;
+    font-size: 0.8rem;
   }
 
   .mode {
+    @include shadow-card;
+    @include basic-transition;
+
+    width: 3.6rem;
+    background-color: white;
+    cursor: pointer;
+
+    &:hover {
+      // @include shadow-dp--1(rgba(0, 0, 0, 0.3));
+
+      transform: translateY(-0.04rem);
+      box-shadow: 0 0.05rem 0.4rem rgba(0, 0, 0, 0.1);
+    }
+
     &-container {
+      height: 100%;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-gap: 0.16rem;
+      grid-gap: 0.8rem;
     }
 
     &-box {
-      @include shadow-card;
+      @include flex-center-container;
+    }
 
-      height: 100%;
+    section {
+      height: 2.4rem;
+    }
+
+    &-bg {
+      @include basic-icon;
+      @include test;
+    }
+
+    &-info {
       padding: 0.16rem;
-      background-color: white;
-      cursor: pointer;
-      transition: 300ms;
-
-      &:hover {
-        @include shadow-dp--1(rgba(0, 0, 0, 0.3));
-
-        transform: translateY(-0.04rem);
-      }
-
-      & > header {
-        margin-bottom: 0.16rem;
-      }
-
-      & > main {}
-
-      & > footer {}
     }
 
     &-title {
@@ -43,6 +55,7 @@
 
       &--sub {
         font-size: 0.12rem;
+        margin-bottom: 0.16rem;
       }
     }
 

@@ -1,12 +1,119 @@
 @import "colors";
 @import "shadow";
+@import "anime";
+@import "util";
 
 .page-lobby {
-  & > section {
-    display: flex;
+  .toolbar {
+    @include flex-center-container;
 
-    & > label {
-      font-size: 0.16rem;
+    justify-content: flex-start;
+    height: 0.6rem;
+    padding: 0 0.16rem;
+
+    & > * {
+      margin-right: 0.16rem;
+    }
+  }
+
+  .room-table {
+    padding: 0 0.16rem;
+    user-select: none;
+
+    header {
+      @include flex-center-container;
+
+      height: 0.6rem;
+      font-size: 0.14rem;
+      font-weight: 500;
+      color: $color-text--light;
+      display: flex;
+    }
+
+    main {
+    }
+
+    .row-body {
+      @include flex-center-container;
+      @include basic-transition;
+
+      height: 0.48rem;
+      margin-bottom: 0.16rem;
+      font-size: 0.14rem;
+      font-weight: 500;
+      border-radius: 0.08rem;
+      background-color: $color-background--light;
+      box-shadow: 0 0.05rem 0.4rem rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+
+      &--available {
+        &:hover {
+          transform: translateY(-0.04rem);
+        }
+      }
+
+      &--disabled {
+        background-color: $color-background--dark;
+        cursor: not-allowed;
+      }
+    }
+
+    [class*="col"] {
+      @include flex-center-container;
+
+      padding: 0 0.16rem;
+      justify-content: flex-start;
+    }
+
+    .col {
+      &-state {
+        flex: 0 0 1.12rem;
+        color: $color-text--light;
+      }
+
+      &-name {
+        flex: 1 0;
+      }
+
+      &-owner {
+        flex: 0 0 3.2rem;
+        color: $color-text--light;
+
+        .avatar {
+          @include basic-icon;
+
+          width: 0.32rem;
+          height: 0.32rem;
+          margin-right: 0.16rem;
+          border-radius: 50%;
+          background-image: url(./asset/avatar.png);
+          background-size: contain;
+        }
+      }
+
+      &-member,
+      &-private,
+      &-mode {
+        flex: 0 0 1.6rem;
+        color: $color-text--light;
+      }
+    }
+
+    .indicator {
+      height: 0.08rem;
+      width: 0.08rem;
+      margin-right: 0.08rem;
+      border-radius: 50%;
+
+      &--idle {
+        background-color: $color-theme-green;
+        box-shadow: 0 0 0.03rem $color-theme-green;
+      }
+
+      &--ingame {
+        background-color: $color-theme--normal;
+        box-shadow: 0 0 0.03rem $color-theme--normal;
+      }
     }
   }
 }

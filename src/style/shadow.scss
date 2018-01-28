@@ -1,19 +1,19 @@
 @mixin shadow-card {
-  box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.01rem 0.02rem rgba(0, 0, 0, 0.3);
 }
 
 @mixin shadow-dp--0($color) {
-  box-shadow: 0 1px 2px 0px $color;
+  box-shadow: 0 0.01rem 0.02rem $color;
 }
 
 @mixin shadow-dp--1($color) {
-  box-shadow: 0 10px 8px -8px $color;
+  box-shadow: 0 0.1rem 0.8rem -0.8rem $color;
 }
 
 @mixin shadow-dp--2($color) {
-  box-shadow: 0 20px 16px -16px $color;
+  box-shadow: 0 0.2rem 0.16rem -0.16rem $color;
 }
 
 @mixin shadow-dp--3($color) {
-  box-shadow: 0 40px 32px -32px $color;
+  box-shadow: 0 0.4rem 0.32rem -0.32rem $color;
 }
