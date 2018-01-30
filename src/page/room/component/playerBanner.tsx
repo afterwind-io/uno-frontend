@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import Anime from 'animejs';
 import './playerBanner.scss';
+import Feather from 'component/feather/feather';
+import Gap from 'component/layout/gap';
 import Avatar from 'ui/avatar/avatar';
 import { Player } from 'model/player';
 
@@ -14,6 +17,12 @@ export default class PlayerBanner extends Vue {
 
   @Prop()
   owner: boolean;
+
+  @Prop({ default: false })
+  mock: boolean;
+
+  @Prop()
+  onAddBot: () => void;
 
   get playerInfo(): Partial<Player> {
     if (this.placeholder) { return {}; }
@@ -42,6 +51,10 @@ export default class PlayerBanner extends Vue {
     };
   }
 
+  addBot() {
+    this.onAddBot && this.onAddBot();
+  }
+
   public render(h) {
     return (
       <div class={this.classPlayerBanner}>
@@ -49,18 +62,27 @@ export default class PlayerBanner extends Vue {
           <Avatar
             src={this.playerInfo.avatar}
             placeholder={this.placeholder}
-            anonymous={this.playerInfo.anonymous}></Avatar>
-          {/* mock={!this.placeholder}></Avatar> */}
+            anonymous={this.playerInfo.anonymous}
+            mock={this.mock}></Avatar>
         </div>
 
         <div class="player-info">
           <p class={this.classPlayerName}>{this.playerInfo.name}</p>
-          <p class={this.classPlayerDetail}>胜率：56% 积分：6666</p>
+          <p class={this.classPlayerDetail}></p>
+          {/* <p class={this.classPlayerDetail}>胜率：56% 积分：6666</p> */}
         </div>
 
-        <div class="gap"></div>
-        <div class="op-exchange"></div>
-        <div class="op-kick"></div>
+        <Gap></Gap>
+
+        {this.placeholder &&
+          <div
+            class="op"
+            title="邀请ai小姐姐"
+            onClick={this.addBot}>
+            <Feather icon="cpu"></Feather>
+          </div>}
+        {/* <div class="op-exchange"></div> */}
+        {/* <div class="op-kick"></div> */}
       </div>
     );
   }

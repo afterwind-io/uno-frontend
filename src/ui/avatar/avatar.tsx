@@ -32,7 +32,7 @@ export default class Avatar extends Vue {
       'ui-avatar--placeholder': this.placeholder,
       'ui-avatar--anonymous': this.anonymous,
       'ui-avatar--round': this.round,
-      [`ui-avatar--mock-${Math.floor(Math.random() * 2)}`]: this.mock,
+      [`ui-avatar--mock-${Math.floor(Math.random() * 3)}`]: this.mock,
     };
   }
 

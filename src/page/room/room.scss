@@ -2,163 +2,67 @@
 @import "shadow";
 
 .page-room {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
   padding: 0.16rem;
+  display: grid;
+  grid-auto-rows: 0.8rem min-content;
+  grid-template-columns: repeat(3, 1fr);
+  grid-row-gap: 0.48rem;
+  grid-column-gap: 0.16rem;
 
-  .room-title {
-    flex: 1 0 100%;
+  & > header {
+    grid-column: 1 / 4;
     display: flex;
     align-items: center;
-    height: 0.6rem;
-
-    & > .avatar {
-      margin-right: 0.08rem;
-      width: 0.48rem;
-      height: 0.48rem;
-    }
 
     & > h1 {
-      font-size: 0.48rem;
+      font-size: 0.36rem;
     }
   }
 
-  .room-config {
-    flex: 0 0 35%;
+  & > aside {
+    grid-column: 1 / 2;
     display: flex;
     flex-direction: column;
-  }
 
-  .config-box {
-    margin-bottom: 0.16rem;
+    .config-box {
+      margin-bottom: 0.48rem;
 
-    & > header {
-      font-size: 0.36rem;
-      line-height: 0.56rem;
+      & > header {
+        font-size: 0.16rem;
+        font-weight: 500;
+        line-height: 0.16rem;
+        margin-bottom: 0.16rem;
+        color: $color-text--light;
+      }
+
+      & > main {
+        p {
+          font-size: 0.24rem;
+          line-height: 0.24rem;
+        }
+
+        span {
+          font-size: 0.12rem;
+          line-height: 0.12rem;
+          color: $color-text--light;
+        }
+      }
+    }
+
+    .config-rule {
+    }
+
+    .config-condition {
+    }
+
+    .config-rounds {
     }
   }
 
-  .config-rule {
-    .rule {
-    }
-
-    h1 {
-      font-size: 0.24rem;
-    }
-
-    h2 {
-      font-size: 0.16rem;
-      color: $color-text--light;
-    }
-  }
-
-  .config-condition {
-    font-size: 0.24rem;
-  }
-
-  .config-rounds {
-    font-size: 0.24rem;
-  }
-
-  .room-players {
-    flex: 1 1;
+  & > main {
+    grid-column: 2 / 4;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 0.16rem;
-    grid-row-gap: 0.16rem;
-  }
-
-  .player-box {
-    // @include shadow-card;
-
-    display: flex;
-    align-items: center;
-    position: relative;
-    height: 0.8rem;
-    // padding: 0 0.16rem;
-    border-radius: 0.08rem;
-    background-color: white;
-    transition: 300ms;
-    overflow: hidden;
-    box-shadow: 0 0.05rem 0.4rem rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      @include shadow-dp--1(rgba(0, 0, 0, 0.3));
-    }
-
-    &--owner::before {
-      @include shadow-card;
-
-      content: "";
-      position: absolute;
-      top: 30%;
-      left: -50%;
-      height: 0.16rem;
-      width: 100%;
-      transform: rotate(-45deg);
-      background-color: $color-theme--light;
-    }
-
-    .avatar {
-      margin-right: 0.16rem;
-      width: 0.8rem;
-      height: 0.8rem;
-      // background: url(./asset/avatar.png) center no-repeat;
-      // background-size: contain;
-    }
-
-    .avatar-vacancy {
-      // TODO
-      background: lightgrey;
-    }
-
-    .player-name {
-      margin-bottom: 0.08rem;
-      font-size: 0.24rem;
-      line-height: 0.24rem;
-      height: 0.24rem;
-    }
-
-    .player-detail {
-      font-size: 0.16rem;
-      line-height: 0.16rem;
-      height: 0.16rem;
-      color: $color-text--light;
-    }
-
-    .op-exchange {
-      margin: 0 0.08rem;
-      width: 0.24rem;
-      height: 0.24rem;
-      background: url(./asset/refresh-cw.svg) center no-repeat;
-      background-size: contain;
-      cursor: pointer;
-    }
-
-    .op-ai {
-      margin: 0 0.08rem;
-      width: 0.24rem;
-      height: 0.24rem;
-      background: url(./asset/cpu.svg) center no-repeat;
-      background-size: contain;
-      cursor: pointer;
-    }
-
-    .op-kick {
-      margin: 0 0.08rem;
-      width: 0.24rem;
-      height: 0.24rem;
-      background: url(./asset/user-x.svg) center no-repeat;
-      background-size: contain;
-      cursor: pointer;
-    }
-
-    // TODO: DELETED
-    .gap {
-      flex-grow: 1;
-    }
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0.16rem;
   }
 }
