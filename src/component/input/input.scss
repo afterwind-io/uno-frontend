@@ -1,34 +1,55 @@
 @import "colors";
+@import "anime";
 
 .ui-input {
   position: relative;
   height: 0.32rem;
   width: 2rem;
-  padding: 0 0.08rem;
   border-radius: 0.16rem;
   background-color: $color-background--light;
   box-shadow: 0 0.01rem 0.03rem 0 rgba(0, 0, 0, 0.3),
     0 0 0.01rem 0 rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  display: flex;
-  align-items: center;
 
   input {
     position: absolute;
+    left: 0;
     height: 100%;
     width: 100%;
-    padding: 0 0.08rem 0 0.24rem;
+    padding: 0 0.32rem 0 0.32rem;
     font-size: 0.16rem;
     line-height: 0.32rem;
     color: $color-text--dark;
+    // background-color: grey;
   }
 
   .feather {
+    position: absolute;
+    top: 0.08rem;
     width: 0.16rem;
     height: 0.16rem;
     z-index: 1;
 
     &-search {
+      left: 0.08rem;
+    }
+
+    &-x {
+      @include basic-transition;
+
+      right: 0.08rem;
+      opacity: 0;
+      cursor: pointer;
+      pointer-events: none;
+
+      &--on {
+        opacity: 0.5;
+        pointer-events: all;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
   }
 }

@@ -93,7 +93,7 @@ export interface Player {
 export const DEFUALT_PLAYER: Player = {
   uid: '',
   name: 'Hoshimiya ichigo',
-  avatar: '',
+  avatar: '7fc6d220-7e3a-4a1d-9b48-ab6a66548c09.png',
   anonymous: false,
   type: 'human',
   socketId: '',

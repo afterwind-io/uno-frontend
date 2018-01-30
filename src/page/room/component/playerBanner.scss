@@ -1,0 +1,96 @@
+@import "colors";
+@import "shadow";
+
+.player-banner {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 0.8rem;
+  // padding: 0 0.16rem;
+  border-radius: 0.08rem;
+  background-color: $color-background--light;
+  transition: 300ms;
+  overflow: hidden;
+  box-shadow: 0 0.05rem 0.4rem rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    @include shadow-dp--1(rgba(0, 0, 0, 0.3));
+  }
+
+  &--owner::before {
+    @include shadow-card;
+
+    content: "";
+    position: absolute;
+    top: 30%;
+    left: -50%;
+    height: 0.16rem;
+    width: 100%;
+    transform: rotate(-45deg);
+    background-color: $color-theme--light;
+  }
+
+  .player-avatar {
+    margin-right: 0.16rem;
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .player-name {
+    margin-bottom: 0.16rem;
+    font-size: 0.24rem;
+    line-height: 0.24rem;
+    height: 0.24rem;
+
+    &--placeholder {
+      height: 0.2rem;
+      width: 1.2rem;
+      background-color: $color-background--normal;
+    }
+  }
+
+  .player-detail {
+    font-size: 0.16rem;
+    line-height: 0.16rem;
+    height: 0.16rem;
+    color: $color-text--light;
+
+    &--placeholder {
+      height: 0.12rem;
+      width: 2rem;
+      background-color: $color-background--normal;
+    }
+  }
+
+  .op-exchange {
+    margin: 0 0.08rem;
+    width: 0.24rem;
+    height: 0.24rem;
+    background: url(../asset/refresh-cw.svg) center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  .op-ai {
+    margin: 0 0.08rem;
+    width: 0.24rem;
+    height: 0.24rem;
+    background: url(../asset/cpu.svg) center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  .op-kick {
+    margin: 0 0.08rem;
+    width: 0.24rem;
+    height: 0.24rem;
+    background: url(../asset/user-x.svg) center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  // TODO: DELETED
+  .gap {
+    flex-grow: 1;
+  }
+}

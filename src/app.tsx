@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import './app.scss';
+import './style/global.scss';
 import { WebsocketService } from 'service';
 import * as UNO from 'store/uno';
 

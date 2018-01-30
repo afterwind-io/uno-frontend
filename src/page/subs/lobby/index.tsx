@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import './lobby.scss';
-import Avatar from 'ui/avatar/index';
-import RoomInfo from './component/roomInfo';
 import Room from 'model/room';
 import UiSwitch from 'component/switch/switch';
 import UiInput from 'component/input/input';

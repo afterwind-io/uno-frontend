@@ -1,19 +1,32 @@
 @import "colors";
+@import "util";
 
 .ui-avatar {
+  @include basic-icon;
+
+  display: block;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  background-position: center;
-  background-repeat: repeat;
   background-size: contain;
-  background-color: $color-theme--light;
+  background-color: $color-background--light;
 
   &--placeholder {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: $color-background--dark;
   }
 
   &--anonymous {
-    background-image: url(./assets/anonymous.jpg);
+    background-image: url(./asset/anonymous.jpg);
+  }
+
+  &--round {
+    border-radius: 50%;
+  }
+
+  &--mock-0 {
+    background-image: url(./asset/hoshimiya_ichigo.png);
+  }
+
+  &--mock-1 {
+    background-image: url(./asset/izumi_sagiri.jpg);
   }
 }

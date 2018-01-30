@@ -1,24 +1,38 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import './room.scss';
+import Avatar from 'ui/avatar/avatar';
+import PlayerBanner from './component/playerBanner';
+import { DEFUALT_PLAYER } from 'model/player';
 
 @Component
 export default class PageRoom extends Vue {
+  public transfer() {
+
+  }
+
+  public kick() {
+
+  }
+
+  public leave() {
+
+  }
+
   public render(h) {
     return (
       <div class="page-room">
         <header class="room-title">
-          <div class="avatar"></div>
           <h1>
             #这个是房间名
-        </h1>
+          </h1>
         </header>
 
         <aside class="room-config">
           <div class="config-box config-rule">
             <header>
               计分规则
-              </header>
+            </header>
 
             <main>
               <div class="rule">
@@ -68,29 +82,24 @@ export default class PageRoom extends Vue {
         </aside>
 
         <section class="room-players">
-          <div class="player-box">
-            <div class="avatar"></div>
-            <div class="player-info">
-              <p class="player-name">Gerard</p>
-              <p class="player-detail">胜率：56% 积分：6666</p>
-            </div>
-            <div class="gap"></div>
-            <div class="op-exchange"></div>
-            <div class="op-friend"></div>
-            <div class="op-kick"></div>
-          </div>
+          <PlayerBanner
+            owner
+            player={DEFUALT_PLAYER}></PlayerBanner>
           <div class="player-box player-box--owner">
-            <div class="avatar"></div>
+            <div class="avatar">
+              <Avatar mock></Avatar>
+            </div>
             <div class="player-info">
               <p class="player-name">Rosemarie</p>
               <p class="player-detail">胜率：56% 积分：6666</p>
             </div>
             <div class="gap"></div>
-            <div class="op-friend"></div>
             <div class="op-kick"></div>
           </div>
           <div class="player-box">
-            <div class="avatar"></div>
+            <div class="avatar">
+              <Avatar mock></Avatar>
+            </div>
             <div class="player-info">
               <p class="player-name">[BOT]Richard</p>
               <p class="player-detail">-</p>
@@ -107,48 +116,18 @@ export default class PageRoom extends Vue {
             <div class="gap"></div>
             <div class="op-ai"></div>
           </div>
-          <div class="player-box">
-            <div class="avatar avatar-vacancy"></div>
-            <div class="player-info">
-              <p class="player-name"></p>
-              <p class="player-detail"></p>
-            </div>
-          </div>
-          <div class="player-box">
-            <div class="avatar avatar-vacancy"></div>
-            <div class="player-info">
-              <p class="player-name"></p>
-              <p class="player-detail"></p>
-            </div>
-          </div>
-          <div class="player-box">
-            <div class="avatar avatar-vacancy"></div>
-            <div class="player-info">
-              <p class="player-name"></p>
-              <p class="player-detail"></p>
-            </div>
-          </div>
-          <div class="player-box">
-            <div class="avatar avatar-vacancy"></div>
-            <div class="player-info">
-              <p class="player-name"></p>
-              <p class="player-detail"></p>
-            </div>
-          </div>
-          <div class="player-box">
-            <div class="avatar avatar-vacancy"></div>
-            <div class="player-info">
-              <p class="player-name"></p>
-              <p class="player-detail"></p>
-            </div>
-          </div>
-          <div class="player-box">
-            <div class="avatar avatar-vacancy"></div>
-            <div class="player-info">
-              <p class="player-name"></p>
-              <p class="player-detail"></p>
-            </div>
-          </div>
+          <PlayerBanner
+            placeholder></PlayerBanner>
+          <PlayerBanner
+            placeholder></PlayerBanner>
+          <PlayerBanner
+            placeholder></PlayerBanner>
+          <PlayerBanner
+            placeholder></PlayerBanner>
+          <PlayerBanner
+            placeholder></PlayerBanner>
+          <PlayerBanner
+            placeholder></PlayerBanner>
         </section>
       </div>
     );

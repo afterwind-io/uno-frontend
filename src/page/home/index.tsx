@@ -2,12 +2,17 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import './home.scss';
 import { PlayerStatus } from 'model/player';
-import Logo from 'component/logo/logo'
+import Logo from 'ui/logo/logo';
+import Avatar from 'ui/avatar/avatar';
 
 @Component
 export default class PageHome extends Vue {
+  get playerAvatar(): string {
+    return this.$store.getters.me.avatar;
+  }
+
   get playerStatus(): PlayerStatus {
-    return this.$store.getters.player.status;
+    return this.$store.getters.me.status;
   }
 
   get matchButtonText(): string {
@@ -17,7 +22,7 @@ export default class PageHome extends Vue {
   }
 
   showMatchModes() {
-    this.$router.push('play')
+    this.$router.push('play');
   }
 
   render() {
@@ -53,7 +58,11 @@ export default class PageHome extends Vue {
             <router-link to="about">关于</router-link>
           </div>
 
-          <div class="profile-avatar"></div>
+          <div class="profile-avatar">
+            <Avatar
+              round
+              src={this.playerAvatar}></Avatar>
+          </div>
 
         </header>
 

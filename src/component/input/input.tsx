@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import './input.scss';
+import { filter } from 'util/common';
 import Feather from '../feather/feather';
 
 @Component
@@ -17,6 +18,16 @@ export default class UiInput extends Vue {
   @Prop()
   changed: (value: string) => void;
 
+  get classIconClear() {
+    return {
+      'feather-x--on': this.value !== '',
+    };
+  }
+
+  clear() {
+    this.changed && this.changed('');
+  }
+
   onInputed({ target }: { target: HTMLInputElement }) {
     this.changed && this.changed(target.value);
   }
@@ -30,7 +41,14 @@ export default class UiInput extends Vue {
           value={this.value}
           onInput={this.onInputed} />
 
-        {this.type === 'search' && <Feather icon="search"></Feather>}
+        {this.type === 'search' && [
+          <Feather icon="search"></Feather>,
+
+          <Feather
+            class={this.classIconClear}
+            icon="x"
+            nativeOnClick={this.clear}></Feather>,
+        ]}
       </div>
     );
   }
