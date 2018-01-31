@@ -6,8 +6,8 @@ import WebsocketService from 'service/websocket';
 @Component
 export default class PagePlay extends Vue {
   async startSingle() {
-    WebsocketService.connect();
-    await this.$store.dispatch('login', { username: 'doge', password: '123456' });
+    // WebsocketService.connect();
+    // await this.$store.dispatch('login', { username: 'doge', password: '123456' });
     await this.$store.dispatch('roomCreate', {
       name: 'Hoshimiya ichigo的房间',
       maxPlayer: 6,

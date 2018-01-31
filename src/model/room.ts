@@ -63,7 +63,7 @@ export default interface Room {
    * @type {RoomState}
    * @memberof Room
    */
-  status: RoomState;
+  state: RoomState;
 
   /**
    * 游戏模式

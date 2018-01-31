@@ -3,6 +3,7 @@ import { Component } from 'vue-property-decorator';
 import './lobby.scss';
 import { WebsocketService } from 'service';
 import Room from 'model/room';
+import { Player } from 'model/player';
 import UiSwitch from 'component/switch/switch';
 import UiInput from 'component/input/input';
 import RoomBanner from './component/roomBanner';
@@ -14,6 +15,10 @@ export default class PageLobby extends Vue {
   private isShowFull: boolean = false;
   private isShowIngame: boolean = false;
 
+  get me(): Player {
+    return this.$store.getters.me;
+  }
+
   get lobby(): Room[] {
     return this.$store.getters.lobby;
   }
@@ -23,10 +28,10 @@ export default class PageLobby extends Vue {
   }
 
   public async create() {
-    WebsocketService.connect();
-    await this.$store.dispatch('login', { username: 'doge', password: '123456' });
+    // WebsocketService.connect();
+    // await this.$store.dispatch('login', { username: 'doge', password: '123456' });
     await this.$store.dispatch('roomCreate', {
-      name: 'Hoshimiya ichigo的房间',
+      name: `${this.me.name}的房间`,
       maxPlayers: 6,
       password: '6p',
       mode: '赢者通吃',
@@ -37,12 +42,22 @@ export default class PageLobby extends Vue {
     this.$router.push('room');
   }
 
-  public join(room: Room) {
-    // TODO
+  public async join(room: Room) {
+    // TODO: 密码
+    await this.$store.dispatch('roomJoin', {
+      roomId: room.uid,
+      password: '',
+    });
+
+    this.$router.push('room');
   }
 
   public onFilterChanged(value: string) {
     this.filter = value;
+  }
+
+  public mounted() {
+    this.refresh();
   }
 
   public render(h) {
@@ -101,31 +116,12 @@ export default class PageLobby extends Vue {
 
           <main>
             {this.lobby.map((room) =>
-              <div class="row-body row-body--available">
-                <div class="col-state">
-                  <div class="indicator indicator--idle"></div>
-                  <p>空闲</p>
-                </div>
-                <div class="col-name">
-                  <p>A veeeeeeeeeeeeeery long room name</p>
-                </div>
-                <div class="col-owner">
-                  <div class="avatar"></div>
-                  <p>Hoshimiya Ichigo</p>
-                </div>
-                <div class="col-member">
-                  <p>8 / 10</p>
-                </div>
-                <div class="col-private">
-                  <p>是</p>
-                </div>
-                <div class="col-mode">
-                  <p>胜者为王</p>
-                </div>
-              </div>,
+              <RoomBanner
+                room={room}
+                nativeOnClick={() => this.join(room)}></RoomBanner>,
             )}
 
-            <div class="row-body row-body--available">
+            {/* <div class="row-body row-body--available">
               <div class="col-state">
                 <div class="indicator indicator--idle"></div>
                 <p>空闲</p>
@@ -192,24 +188,10 @@ export default class PageLobby extends Vue {
               <div class="col-mode">
                 <p>胜者为王</p>
               </div>
-            </div>
+            </div> */}
 
           </main>
         </div>
-
-        {/* <main>
-          <div class="room-box room--idle">
-            <RoomInfo
-              room={{
-                name: '这个是房间名称',
-                owner: {},
-                players: [],
-                mode: '标准模式，3轮',
-              }}
-              selected={(room) => this.join(room)}
-            />
-          </div>
-        </main> */}
 
         {/* <aside>
           <input type="text" placeholder="房间名称" />

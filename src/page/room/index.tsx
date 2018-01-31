@@ -71,7 +71,7 @@ export default class PageRoom extends Vue {
     return (
       <div class="page page-room">
         <header>
-          <h1>{this.room.name}</h1>
+          <h1>#{this.room.name}</h1>
         </header>
 
         <aside>

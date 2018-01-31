@@ -48,6 +48,17 @@ export const room: Module<IStoreRoom, any> = {
 
       commit('setRoomDetail', detail);
     },
+    async roomJoin({ state, commit, rootGetters }, option: {
+      roomId: string,
+      password: string,
+    }) {
+      const { uid: playerId } = rootGetters.me;
+      const { roomId, password } = option;
+
+      const roomDetail = await WebsocketService.send('room/join', { roomId, playerId, password });
+
+      commit('setRoomDetail', roomDetail);
+    },
     async roomLeave({ state, commit, rootGetters }) {
       const { uid: roomId } = state.room;
       const { uid: playerId } = rootGetters.me;

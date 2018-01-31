@@ -163,7 +163,7 @@ const store: Module<IStoreUno, any> = {
   },
   mutations: {
     update(state, snapshot: UnoSnapshot) {
-      if (snapshot === void 0) return;
+      if (snapshot === void 0) { return; }
 
       state.color = snapshot.color;
       state.symbol = snapshot.symbol;
@@ -197,8 +197,31 @@ const store: Module<IStoreUno, any> = {
     },
   },
   actions: {
-    async deal({ commit, state }, payload: { roomId: string, deals: Card[] }) {
-      await WebsocketService.send('game/call', payload);
+    async deal({ commit, rootGetters }, deals: Card[]) {
+      const { uid: roomId } = rootGetters.room;
+
+      await WebsocketService.send('game/call', { roomId, deals });
+      commit('toss', deals);
+    },
+    async pass({ rootGetters }) {
+      const { uid: roomId } = rootGetters.room;
+
+      await WebsocketService.send('game/deal', { roomId, deals: [Card.Pass] });
+    },
+    async pickColor({ rootGetters }, color: CardColor) {
+      const { uid: roomId } = rootGetters.room;
+
+      await WebsocketService.send('game/deal', { roomId, deals: [Card.PickColor(color)] });
+    },
+    async skip({ rootGetters }) {
+      const { uid: roomId } = rootGetters.room;
+
+      await WebsocketService.send('game/deal', { roomId, deals: [Card.Skip] });
+    },
+    async takePenalties({ rootGetters }) {
+      const { uid: roomId } = rootGetters.room;
+
+      await WebsocketService.send('game/deal', { roomId, deals: [Card.PenaltyOver] });
     },
   },
 };

@@ -86,12 +86,12 @@ export default class PageLanding extends Vue {
 
               <div class="input">
                 <div class="label">昵称</div>
-                <input type="text" value={this.username} />
+                <input type="text" value={this.username} onInput={e => this.username = e.target.value} />
                 <div class="hint">请输入游戏内昵称，新的昵称将会被自动注册</div>
               </div>
               <div class="input">
                 <div class="label">密码</div>
-                <input type="text" value={this.password} />
+                <input type="text" value={this.password} onInput={e => this.password = e.target.value} />
                 <div class="hint">至少6位，数字字母符号什么的随便了</div>
               </div>
 

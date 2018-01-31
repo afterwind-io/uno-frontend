@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import './roomBanner.scss';
 import Room, { RoomState } from 'model/room';
+import Avatar from 'ui/avatar/avatar';
 
 @Component
 export default class RoomBanner extends Vue {
@@ -9,7 +10,7 @@ export default class RoomBanner extends Vue {
   room: Room;
 
   get state(): string {
-    return this.room.status === RoomState.idle ? '空闲' : '游戏中';
+    return this.room.state === RoomState.idle ? '空闲' : '游戏中';
   }
 
   get member(): string {
@@ -27,7 +28,11 @@ export default class RoomBanner extends Vue {
           <p>{this.room.name}</p>
         </div>
         <div class="col-owner">
-          <div class="avatar"></div>
+          <div class="avatar">
+            <Avatar
+              round
+              src={this.room.owner.avatar}></Avatar>
+          </div>
           <p>{this.room.owner.name}</p>
         </div>
         <div class="col-member">

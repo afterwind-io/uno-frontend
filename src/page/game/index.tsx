@@ -89,37 +89,26 @@ export default class PageGame extends Vue {
   }
 
   async deal() {
-    const roomId = this.$store.getters.roomId;
-    const deals = this.selectedCards;
-
-    await WebsocketService.send('game/deal', { roomId, deals });
-
-    this.$store.commit('toss', deals);
+    await this.$store.dispatch('deal', this.selectedCards);
     this.selectedCards = [];
   }
 
   async pass() {
-    const roomId = this.$store.getters.roomId;
-    return WebsocketService.send('game/deal', { roomId, deals: [Card.Pass] });
+    await this.$store.dispatch('pass');
   }
 
   async takePenalties() {
-    const roomId = this.$store.getters.roomId;
-    return WebsocketService.send('game/deal', { roomId, deals: [Card.PenaltyOver] });
+    await this.$store.dispatch('takePenalties');
   }
 
   async pickColor(color: CardColor) {
-    const roomId = this.$store.getters.roomId;
-    const deals = [Card.PickColor(color)];
-
-    await WebsocketService.send('game/deal', { roomId, deals });
+    await this.$store.dispatch('pickColor', color);
 
     this.isShowColorSelector = false;
   }
 
   async skipped() {
-    const roomId = this.$store.getters.roomId;
-    return WebsocketService.send('game/deal', { roomId, deals: [Card.Skip] });
+    await this.$store.dispatch('skip');
   }
 
   async mounted() {
@@ -251,8 +240,12 @@ export default class PageGame extends Vue {
         <RollingTable guests={this.players} pointer={this.pointer}></RollingTable>
 
         <footer>
-          <p onClick={() => this.deal()} style="position: absolute; left: -0.50rem; font-size: 0.24rem;">DEAL</p>
-          <p onClick={() => this.pass()} style="position: absolute; left: -0.50rem; top: 0.24rem; font-size: 0.24rem;">PASS</p>
+          {this.isMyTurn &&
+            <p onClick={() => this.deal()} style="position: absolute; left: -0.50rem; font-size: 0.24rem;">DEAL</p>
+          }
+          {this.isMyTurn &&
+            <p onClick={() => this.pass()} style="position: absolute; left: -0.50rem; top: 0.24rem; font-size: 0.24rem;">PASS</p>
+          }
 
           {this.isShowColorSelector && <div class="colors">
             <p onClick={() => this.pickColor(CardColor.Red)}>红色</p>
