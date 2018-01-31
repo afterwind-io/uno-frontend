@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import './lobby.scss';
+import { WebsocketService } from 'service';
 import Room from 'model/room';
 import UiSwitch from 'component/switch/switch';
 import UiInput from 'component/input/input';
+import RoomBanner from './component/roomBanner';
 
 @Component
 export default class PageLobby extends Vue {
@@ -12,9 +14,32 @@ export default class PageLobby extends Vue {
   private isShowFull: boolean = false;
   private isShowIngame: boolean = false;
 
-  public create() { }
+  get lobby(): Room[] {
+    return this.$store.getters.lobby;
+  }
 
-  public join(room: Room) { }
+  public async refresh() {
+    await this.$store.dispatch('lobbyFetchList');
+  }
+
+  public async create() {
+    WebsocketService.connect();
+    await this.$store.dispatch('login', { username: 'doge', password: '123456' });
+    await this.$store.dispatch('roomCreate', {
+      name: 'Hoshimiya ichigo的房间',
+      maxPlayers: 6,
+      password: '6p',
+      mode: '赢者通吃',
+      maxRounds: 1,
+      maxScore: 1,
+    });
+
+    this.$router.push('room');
+  }
+
+  public join(room: Room) {
+    // TODO
+  }
 
   public onFilterChanged(value: string) {
     this.filter = value;
@@ -48,6 +73,8 @@ export default class PageLobby extends Vue {
             changed={(value) => (this.isShowIngame = value)}>
             游戏中
           </UiSwitch>
+
+          <p style="font-size: 0.36rem;" onClick={this.create}>创建</p>
         </div>
 
         <div class="room-table">
@@ -73,6 +100,31 @@ export default class PageLobby extends Vue {
           </header>
 
           <main>
+            {this.lobby.map((room) =>
+              <div class="row-body row-body--available">
+                <div class="col-state">
+                  <div class="indicator indicator--idle"></div>
+                  <p>空闲</p>
+                </div>
+                <div class="col-name">
+                  <p>A veeeeeeeeeeeeeery long room name</p>
+                </div>
+                <div class="col-owner">
+                  <div class="avatar"></div>
+                  <p>Hoshimiya Ichigo</p>
+                </div>
+                <div class="col-member">
+                  <p>8 / 10</p>
+                </div>
+                <div class="col-private">
+                  <p>是</p>
+                </div>
+                <div class="col-mode">
+                  <p>胜者为王</p>
+                </div>
+              </div>,
+            )}
+
             <div class="row-body row-body--available">
               <div class="col-state">
                 <div class="indicator indicator--idle"></div>

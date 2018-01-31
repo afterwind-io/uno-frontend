@@ -7,9 +7,9 @@ interface IWsResponse<T> {
 }
 
 interface IEventOption<T> {
-  event: string
-  handler: (param: T) => void
-  override: boolean
+  event: string;
+  handler: (param: T) => void;
+  override: boolean;
 }
 
 function isOk(code: number) {
@@ -46,7 +46,7 @@ class WebsocketService {
     return new Promise((resolve, reject) => {
       this.queue.add(api);
 
-      let packet = { token: this.token, route: api, param };
+      const packet = { token: this.token, route: api, param };
       this.ws.emit('request', packet, (res: IWsResponse<T>) => {
         this.queue.delete(api);
 
@@ -74,7 +74,7 @@ class WebsocketService {
 
   private cacheLazyEventHanlder(event: string, handler: (param: any) => void, override: boolean) {
     this.lazyEvents.push({
-      event, handler, override
+      event, handler, override,
     });
   }
 

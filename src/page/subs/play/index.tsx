@@ -8,20 +8,20 @@ export default class PagePlay extends Vue {
   async startSingle() {
     WebsocketService.connect();
     await this.$store.dispatch('login', { username: 'doge', password: '123456' });
-    const { uid } = await WebsocketService.send<any>('room/create', {
-      owner: this.$store.getters.player.uid,
+    await this.$store.dispatch('roomCreate', {
+      name: 'Hoshimiya ichigo的房间',
       maxPlayer: 6,
       password: '6p',
       mode: '赢者通吃',
       maxRounds: 1,
       maxScore: 1,
     });
-    await WebsocketService.send('room/addbot', { roomId: uid });
-    await WebsocketService.send('room/addbot', { roomId: uid });
-    await WebsocketService.send('room/addbot', { roomId: uid });
-    await WebsocketService.send('room/addbot', { roomId: uid });
-    await WebsocketService.send('room/addbot', { roomId: uid });
-    WebsocketService.send('game/start', { roomId: uid });
+    await this.$store.dispatch('roomAddBot');
+    await this.$store.dispatch('roomAddBot');
+    await this.$store.dispatch('roomAddBot');
+    await this.$store.dispatch('roomAddBot');
+    await this.$store.dispatch('roomAddBot');
+    await this.$store.dispatch('roomStartGame');
   }
 
   mounted() {

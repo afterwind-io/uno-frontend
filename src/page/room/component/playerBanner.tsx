@@ -22,7 +22,10 @@ export default class PlayerBanner extends Vue {
   mock: boolean;
 
   @Prop()
-  onAddBot: () => void;
+  whenAddBot: () => void;
+
+  @Prop()
+  whenKick: (player) => void;
 
   get playerInfo(): Partial<Player> {
     if (this.placeholder) { return {}; }
@@ -52,7 +55,11 @@ export default class PlayerBanner extends Vue {
   }
 
   addBot() {
-    this.onAddBot && this.onAddBot();
+    this.whenAddBot && this.whenAddBot();
+  }
+
+  kick() {
+    this.whenKick && this.whenKick(this.player);
   }
 
   public render(h) {
@@ -81,6 +88,15 @@ export default class PlayerBanner extends Vue {
             onClick={this.addBot}>
             <Feather icon="cpu"></Feather>
           </div>}
+
+        {!this.placeholder && !this.owner &&
+          <div
+            class="op"
+            title={this.playerInfo.type === 'human' ? '移除该玩家' : '移除ai小姐姐'}
+            onClick={this.kick}>
+            <Feather icon="removeUser"></Feather>
+          </div>
+        }
         {/* <div class="op-exchange"></div> */}
         {/* <div class="op-kick"></div> */}
       </div>

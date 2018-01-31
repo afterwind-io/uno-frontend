@@ -14,6 +14,8 @@ export enum RoomState {
   ingame = 'ingame',
 }
 
+export type UNOMode = '胜者为王' | '赢者通吃' | '大隐于市';
+
 export default interface Room {
   /**
    * 房间uid
@@ -62,4 +64,36 @@ export default interface Room {
    * @memberof Room
    */
   status: RoomState;
+
+  /**
+   * 游戏模式
+   *
+   * @type {UNOMode}
+   * @memberof Room
+   */
+  mode: UNOMode;
+
+  /**
+   * 最大场次
+   *
+   * @type {number}
+   * @memberof Room
+   */
+  maxRounds: number;
+
+  /**
+   * 最大积分
+   *
+   * @type {number}
+   * @memberof Room
+   */
+  maxScore: number;
+
+  /**
+   * 当前场次
+   *
+   * @type {number}
+   * @memberof Room
+   */
+  rounds: number;
 }
